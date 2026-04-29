@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>SafeCampus</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <!-- navbar -->
+     <div class="navbar">
+        <!-- logo section  -->
+         <div class="logo-box">
+            <div class="logo-icon">🛡️</div>
+            <div class="logo-text">
+                <h2>
+                    SAFE CAMPUS
+                </h2>
+                <P>Speak Up.Stay Safe.</P>
+            </div>
+         </div>
+        
+     </div>
+    <div class="blur-overlay"></div>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <div class="container">
+    <div class="form-box">
+        <h1>Report an Incident</h1>
+        <p>Your Safety,Our Priority</p>
+
+    <form>
+        <textarea id="description" placeholder="📝Enter Description"></textarea><br>
+        <button type="submit" id="submitBtn">Submit</button>
+        <button type="button" id="locationBtn" onclick="enableManual()">🏠
+Change Location</button>
+    </form>
+    <div id="pickMap" style="height:300px; display:none; margin-top:10px;">
+    </div>
+    <small>🔒Your identity will remain anonymous</small>
+    </div>
+    <script type="module" src="script.js">
+
+    </script>
+</body>
+
+</html>

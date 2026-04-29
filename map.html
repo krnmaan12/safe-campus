@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>SafeCampus Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Campus Reports Map</h2>
+  <div id="map"></div>
+
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 🔑 Firebase config (apna paste karo)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfCs679Y-aSbM7txp6Hm50Rqe3dww",
+      authDomain: "safecampus-e2281.firebaseapp.com",
+      projectId: "safecampus-e2281",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 🌍 Map init
+    const map = L.map('map').setView([30.251296, 74.841636], 17);
+
+    const redIcon = L.icon({
+      iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+      iconSize: [32, 32]
+    });
+
+    // 🌐 Map tiles
+    L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(map);
+
+
+    // 📍 Fetch data from Firebase
+    const querySnapshot = await getDocs(collection(db, "reports"));
+
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        map.removeLayer(layer);
+      }
+    });
+
+    // 📍 Collect all markers
+    const markers = [];
+
+    const uniqueLocations = new Set();
+
+    querySnapshot.forEach((doc) => {
+      const uniqueLocations = new Set();
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const key = `${data.latitude}-${data.longitude}`;
+
+        if (!uniqueLocations.has(key)) {
+          uniqueLocations.add(key);
+
+          L.marker([data.latitude, data.longitude], { icon: redIcon })
+            .addTo(map)
+            .bindPopup(`
+    <b>${data.description}</b><br>
+    ${new Date(data.time.seconds * 1000).toLocaleString()}
+  `);
+        }
+      });
+
+      if (markers.length > 0) {
+        map.fitBounds(markers);
+      }
+
+    });
+
+
+  </script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+</body>
+
+</html>
